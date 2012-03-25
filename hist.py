@@ -1,6 +1,7 @@
 """ A class for calculating histograms incrementally. """
-from collections import defaultdict
 import numpy as np
+from collections import defaultdict
+
 
 class RHist():
 	""" 
@@ -16,10 +17,11 @@ class RHist():
 	<decimals> see the docs for numpy.round().  
 	"""
 
-	def __init__(self,decimals=1):
+	def __init__(self,name,decimals=1):
 		self.decimals = decimals
-		self.h = defaultdict(int)
+		self.name = name
 
+		self.h = defaultdict(int)
 		self.h_norm = None
 
 
@@ -86,6 +88,15 @@ class RHist():
 		return np.sum(self.h.values())
 
 
+	def stdev(self):
+		""" Estimate and return the variance. """
+
+		var = self.var()
+		n = self.n()
+
+		return np.sqrt(var/(n-1))
+
+
 	def fitPDF(self,family):
 		""" Fit a probability density function (of type <family>) """
 
@@ -93,22 +104,40 @@ class RHist():
 		pass
 
 
-	def plot(self,pid=None,norm=True):
+	def plot(self,fig=None,norm=False):
 		"""
 		Plot the histogram.  
 
-		If provided current data is added to <pid>, a matplotlib plot 
-		identifier.  
+		If provided current data is added to <fig>, a matplotlib plot 
+		identifier.
 		<norm> indicates whether the raw counts or normalized values 
 		should be plotted.
 		"""
+		import matplotlib.pyplot as plt
 
-		if norm:
-			if self.h_norm is None:
-				self.norm()
-			
-		# TODO
-		pass
+		plt.ion()
+			## Interactive plots -- go.
+
+		xs = []; ys = []
+		if norm is True:
+			if self.h_norm is None: self.norm()
+			xs,ys = zip(*sorted(self.h_norm.items()))
+		else:
+			xs,ys = zip(*sorted(self.h.items()))
+
+		ax = None
+		if fig is None:
+			fig = plt.figure()
+			ax = fig.add_subplot(111)
+		
+		# Find the min width for bars
+		width = min([xs[ii+1] - xs[ii] for ii in range(len(xs)-1)])
+
+		# Plot!
+		ax.bar(xs,ys,width=width,align='center',label=self.name)
+		plt.show()
+		
+		return fig
 
 
 class Hist(RHist):
