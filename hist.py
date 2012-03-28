@@ -5,9 +5,9 @@ from collections import defaultdict
 
 class RHist():
 	""" 
-	Creates histogram/bins where the bin size and location is set by 
-	rounding the input (i.e. <decimals>) but where the number and range 
-	of bins is determined online. 
+	A class for calculating histograms where the bin size 
+	and location is set by rounding the input (i.e. use <decimals>) but 
+	where the number and range of bins is determined by the data. 
 
 	As a result you need only know in advance the approximate scale 
 	your data will take, i.e. the precision you're interested in.
@@ -27,7 +27,8 @@ class RHist():
 
 	def incr(self,x):
 		""" Add <x>, a data point, to the histogram """
-	
+
+		# Do type checking here?
 		self.h[np.round(x,self.decimals)] += 1
 
 
