@@ -1,4 +1,4 @@
-""" A class for calculating histograms incrementally. """
+""" A class for building histograms incrementally. """
 import numpy as np
 from collections import defaultdict
 
@@ -6,8 +6,8 @@ from collections import defaultdict
 class RHist():
 	""" 
 	Creates histogram/bins where the bin size and location is set by 
-	rounding (i.e.<decimals>) but where the number and range of bins 
-	is determined online. 
+	rounding the input (i.e. <decimals>) but where the number and range 
+	of bins is determined online. 
 
 	As a result you need only know in advance the approximate scale 
 	your data will take, i.e. the precision you're interested in.
@@ -26,6 +26,8 @@ class RHist():
 
 
 	def incr(self,x):
+		""" Add <x>, a data point, to the histogram """
+	
 		self.h[np.round(x,self.decimals)] += 1
 
 
@@ -83,7 +85,7 @@ class RHist():
 
 		
 	def n(self):
-		""" Count and return the total number of samples """
+		""" Count and return the total number of samples. """
 
 		return np.sum(self.h.values())
 
@@ -104,7 +106,7 @@ class RHist():
 		pass
 
 
-	def plot(self,fig=None,norm=False):
+	def plot(self,fig=None,color='black',norm=False):
 		"""
 		Plot the histogram.  
 
@@ -120,7 +122,8 @@ class RHist():
 
 		xs = []; ys = []
 		if norm is True:
-			if self.h_norm is None: self.norm()
+			if self.h_norm is None: 
+				self.norm()
 			xs,ys = zip(*sorted(self.h_norm.items()))
 		else:
 			xs,ys = zip(*sorted(self.h.items()))
@@ -129,12 +132,17 @@ class RHist():
 		if fig is None:
 			fig = plt.figure()
 			ax = fig.add_subplot(111)
-		
-		# Find the min width for bars
-		width = min([xs[ii+1] - xs[ii] for ii in range(len(xs)-1)])
+		else:
+			ax = fig.axes[0]
 
-		# Plot!
-		ax.bar(xs,ys,width=width,align='center',label=self.name)
+		# Find the min width for bars. And plot!
+		width = min([xs[ii+1] - xs[ii] for ii in range(len(xs)-1)])
+		ax.bar(xs,ys,
+				width=width,
+				alpha=0.4,
+				color=color,edgecolor=color,
+				align='center',
+				label=self.name)
 		plt.show()
 		
 		return fig
