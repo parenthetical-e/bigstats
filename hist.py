@@ -9,7 +9,7 @@ class RHist():
 	and location is set by rounding the input (i.e. use <decimals>) but 
 	where the number and range of bins is determined by the data. 
 
-	As a result you need only know in advance the approximate scale 
+	As a result, you need only know in advance the approximate scale 
 	your data will take, i.e. the precision you're interested in.
 
 	<decimals> is an integer specifying the number of decimals places.
