@@ -14,7 +14,6 @@ def test_RHist():
 	print('N (10000): {0}'.format(rh.n()))
 	print('** Decimals should be precise to 1 place.**')
 
-	print('Plot 1 is frequencies, 2 is probabilites.')
-	fig2 = rh.plot(fig=None,norm=True)
+	fig = rh.plot(fig=None,norm=True)
 
 	# TODO: Add a uniform and some asymmetric dist too.

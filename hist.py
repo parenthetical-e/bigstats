@@ -8,13 +8,16 @@ class RHist():
 	A class for calculating histograms where the bin size 
 	and location is set by rounding the input (i.e. use <decimals>) but 
 	where the number and range of bins is determined by the data. 
-
+	
 	As a result, you need only know in advance the approximate scale 
 	your data will take, i.e. the precision you're interested in.
 
-	<decimals> is an integer specifying the number of decimals places.
-	Negative numbers behave as expected. For more information on 
-	<decimals> see the docs for numpy.round().  
+	There are a few methods that return useful statistics.
+
+	<name> is a unique identifier for this histogram.
+
+	<decimals> is an integer specifying the number of decimal places.
+	Negative numbers behave as expected.  
 	"""
 
 	def __init__(self,name,decimals=1):
@@ -25,7 +28,7 @@ class RHist():
 		self.h_norm = None
 
 
-	def incr(self,x):
+	def add(self,x):
 		""" Add <x>, a data point, to the histogram """
 
 		# Do type checking here?
@@ -33,7 +36,10 @@ class RHist():
 
 
 	def norm(self):
-		""" Calculate the normalized histogram (i.e. a PMF). """
+		""" 
+		Calculate the normalized histogram (i.e. a probability
+		mass function). 
+		"""
 		from copy import deepcopy
 		# Borrowed from the implementation discussed in 
 		# Think Stats Probability and Statistics for Programmers
@@ -113,6 +119,7 @@ class RHist():
 
 		If provided current data is added to <fig>, a matplotlib plot 
 		identifier.
+
 		<norm> indicates whether the raw counts or normalized values 
 		should be plotted.
 		"""
@@ -153,13 +160,12 @@ class Hist(RHist):
 	""" A histogram/bin class with a known <min>, <max> with <num> of bins """ 
 	
 	def __init__(self,min,max,num):
-		try: RHist.__init__(self)
-		except AttributeError: pass
+		RHist.__init__(self)
 
 		# TODO create bins for self.h	
 		pass
 
 
-	def incr(self,x):
+	def add(self,x):
 		# TODO overide
 		pass	
