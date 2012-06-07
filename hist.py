@@ -156,16 +156,3 @@ class RHist():
 		return fig
 
 
-class Hist(RHist):
-	""" A histogram/bin class with a known <min>, <max> with <num> of bins """ 
-	
-	def __init__(self,min,max,num):
-		RHist.__init__(self)
-
-		# TODO create bins for self.h	
-		pass
-
-
-	def add(self,x):
-		# TODO overide
-		pass	
