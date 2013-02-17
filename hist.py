@@ -70,8 +70,29 @@ class RHist():
             mean += p * x
         
         return mean
+    
+    
+    def median(self):
+        """ Estimate and return the median. """
+        
+        # Get all the key values
+        # and sort them.
+        values = self.h.keys()
+        values = sorted(values)
+        
+        # And count them too
+        nvalues = len(values)
 
-
+        # If even:
+        if (nvalues % 2) == 0:
+            median = (values[nvalues / 2] + values[(nvalues / 2) + 1]) / 2.0
+        # Or odd
+        else:
+            median = values[(nvalues + 1) / 2]
+        
+        return median
+    
+    
     def var(self):
         """ Estimate and return the variance. """
         # Borrowed from the implementation discussed in 
@@ -106,13 +127,62 @@ class RHist():
         return np.sqrt(var/(n-1))
 
 
-    def fitPDF(self,family):
+    def se(self):
+        """ Estimate and return the standard error. """
+        
+        sd = self.stdev()
+        n = self.n()
+        
+        return sd / np.sqrt(n)
+
+
+    def above(self, criterion):
+        """ Estimate and return the percent area of the histogram at 
+        or above the <criterion>. """
+        
+        # If the bin is at or above, add to the list of values
+        # the sum and norm the values.
+        values = [value for key, value in self.h.items() if key >= criterion]
+        
+        return np.sum(values) / float(self.n())
+
+
+    def overlap(self, Rhist):
+        """ Calculates the percent overlap between this histogram and 
+        <Rhist>, another histogram instance. 
+        
+        Note: percent overlap is calculated by finding the difference
+        in absolute counts for all overlapping bins, summing these, 
+        then normalizing by the total counts for both distributions
+        (all bins). """
+        
+        n1 = self.n()  ## Get total counts
+        n2 = Rhist.n()
+        
+        # Tabulate the diffs for each
+        # overlapping bin.
+        diffs = []
+        for key, val1 in self.h.items():
+            try:
+                val2 = Rhist.h[key]
+            except KeyError:
+                pass
+            else:
+                val1 = float(val1)
+                val2 = float(val2)
+                diffs.append(max(val1, val2) - np.abs(val1 - val2))
+        
+        # Sum, then normalize by total count.
+        return np.sum(diffs) / (n1 + n2)
+
+    
+    def fitPDF(self, family):
         """ Fit a probability density function (of type <family>) """
 
-        # TODO
-        pass
-
-
+        # TODO...
+        raise NotImplementedError()
+    
+    
     def plot(self,fig=None,color='black',norm=False):
         """
         Plot the histogram.  
